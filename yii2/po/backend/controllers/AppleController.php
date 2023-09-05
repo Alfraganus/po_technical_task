@@ -1,22 +1,20 @@
 <?php
+
 namespace backend\controllers;
 
-use common\models\Apple;
+use backend\service\AppleService;
+use Yii;
 use yii\web\Controller;
+use common\models\Apple;
 
 class AppleController extends Controller
 {
+    private $appleService;
 
-    public $enableCsrfValidation = false;
-
-    public function actionCreateApples($count)
+    public function __construct($id, $module, AppleService $appleService, $config = [])
     {
-        for ($i = 0; $i < $count; $i++) {
-            $apple = new Apple();
-            $apple->save();
-        }
-
-        return $this->redirect(['index']);
+        $this->appleService = $appleService;
+        parent::__construct($id, $module, $config);
     }
 
     public function actionIndex()
@@ -25,20 +23,21 @@ class AppleController extends Controller
         return $this->render('index', ['apples' => $apples]);
     }
 
-    public function actionFall($id)
+    public function actionGenerateApples($count)
     {
-        $apple = Apple::findOne($id);
-        $apple->fallToGround();
-        $apple->save();
+        $this->appleService->generateApples($count,true);
 
         return $this->redirect(['index']);
+    }
+
+    public function actionFall($id)
+    {
+        $this->appleService->fall($id);
     }
 
     public function actionEat($id, $percent)
     {
-        $apple = Apple::findOne($id);
-        $apple->eat($percent);
-
-        return $this->redirect(['index']);
+        $this->appleService->eat($id, $percent);
     }
+
 }

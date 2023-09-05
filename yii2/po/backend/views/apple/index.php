@@ -1,45 +1,42 @@
 <?php
 
-use yii\bootstrap5\ActiveForm;
-use yii\helpers\Html;
 use common\models\Apple;
+use yii\helpers\Html;
+?>
 
-foreach ($apples as $apple): ?>
-    <div class="apple-item">
-        <p>
-            Яблоко цвета <?= Html::encode($apple->color) ?>, размер <?= $apple->size ?>%
-        </p>
-        <?php if ($apple->status === Apple::STATUS_ON_TREE): ?>
-            <button class="btn btn-primary" onclick="fall(<?= $apple->id ?>)">Упасть</button>
-        <?php elseif ($apple->status === Apple::STATUS_ON_GROUND): ?>
-            <?php $form = ActiveForm::begin([
-                'action' => ['apple/eat', 'id' => $apple->id],
-                'method' => 'post',
-            ]); ?>
-            <?= $form->field($apple, 'size')->textInput(['type' => 'number', 'min' => 1, 'max' => 100])->label('Съесть (в %):') ?>
-            <button class="btn btn-success" onclick="eat(<?= $apple->id ?>, 25)">Съесть</button>
-            <?php ActiveForm::end(); ?>
-        <?php endif; ?>
-    </div>
+<?php foreach (Yii::$app->session->getAllFlashes() as $key => $message): ?>
+    <div class="alert alert-<?= $key ?>"><?= $message ?></div>
+    <?php Yii::$app->session->removeFlash($key); ?>
 <?php endforeach; ?>
 
-<script>
-    function fall(id) {
-        $.ajax({
-            type: 'POST',
-            url: '<?= Yii::$app->urlManager->createUrl(['apple/fall']) ?>?id=' + id,
-            success: function () {
-                location.reload();
-            }
-        });
-    }
-    function eat(id, percent) {
-        $.ajax({
-            type: 'POST',
-            url: '<?= Yii::$app->urlManager->createUrl(['apple/eat']) ?>?id=' + id + '&percent=' + percent,
-            success: function () {
-                location.reload();
-            }
-        });
-    }
-</script>
+<?= Html::a('Generate Random Apples', ['generate-apples', 'count' => 5], ['class' => 'btn btn-success']) ?>
+
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Color</th>
+        <th>Status</th>
+        <th>Size</th>
+        <th>Fallen datetime</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($apples as $apple): ?>
+        <tr>
+            <td><?= Html::encode($apple->color) ?></td>
+            <td><?= $apple->status == Apple::STATUS_ON_TREE ? "on tree" : "on ground" ?></td>
+            <td><?= Html::encode($apple->size) ?></td>
+            <td><?= date('d-m-Y H:i:s', $apple->fallen_at) ?></td>
+            <td>
+                <?php if ($apple->status === Apple::STATUS_ON_GROUND || $apple->status == Apple::STATUS_ROTTEN): ?>
+                    <?= Html::a('Eat 25%', ['eat', 'id' => $apple->id, 'percent' => 25], ['class' => 'btn btn-primary']) ?>
+                <?php else: ?>
+                    <?= Html::a('Fall', ['fall', 'id' => $apple->id], ['class' => 'btn btn-success']) ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
