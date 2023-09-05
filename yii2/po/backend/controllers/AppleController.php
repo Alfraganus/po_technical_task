@@ -26,8 +26,6 @@ class AppleController extends Controller
     public function actionGenerateApples($count)
     {
         $this->appleService->generateApples($count,true);
-
-        return $this->redirect(['index']);
     }
 
     public function actionFall($id)
