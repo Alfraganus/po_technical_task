@@ -2,18 +2,32 @@
 
 namespace backend\controllers;
 
-use backend\service\AppleService;
 use Yii;
 use yii\web\Controller;
 use common\models\Apple;
+use backend\service\AppleService;
+use backend\service\appleService\AppleEatService;
+use backend\service\appleService\AppleFallService;
+use backend\service\appleService\GenerateAppleService;
 
 class AppleController extends Controller
 {
-    private $appleService;
+    private $generateDumpService;
+    private $appleFallService;
+    private $appleEatService;
 
-    public function __construct($id, $module, AppleService $appleService, $config = [])
+    public function __construct(
+        $id,
+        $module,
+        GenerateAppleService $generateAppleService,
+        AppleFallService $appleFallService,
+        AppleEatService $appleEatService,
+        $config = []
+    )
     {
-        $this->appleService = $appleService;
+        $this->generateDumpService = $generateAppleService;
+        $this->appleEatService = $appleEatService;
+        $this->appleFallService = $appleFallService;
         parent::__construct($id, $module, $config);
     }
 
@@ -25,16 +39,16 @@ class AppleController extends Controller
 
     public function actionGenerateApples($count)
     {
-        $this->appleService->generateApples($count,true);
+        $this->generateDumpService->generateApples($count,true);
     }
 
     public function actionFall($id)
     {
-        $this->appleService->fall($id);
+        $this->appleFallService->fall($id);
     }
 
     public function actionEat($id, $percent)
     {
-        $this->appleService->eat($id, $percent);
+        $this->appleEatService->eat($id, $percent);
     }
 }
