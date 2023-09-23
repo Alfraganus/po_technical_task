@@ -2,10 +2,7 @@
 
 namespace backend\controllers;
 
-use Yii;
-use yii\web\Controller;
 use common\models\Apple;
-use backend\service\AppleService;
 use backend\service\appleService\AppleEatService;
 use backend\service\appleService\AppleFallService;
 use backend\service\appleService\GenerateAppleService;
