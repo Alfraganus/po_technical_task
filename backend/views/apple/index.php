@@ -9,7 +9,7 @@ use yii\helpers\Html;
     <?php Yii::$app->session->removeFlash($key); ?>
 <?php endforeach; ?>
 
-<?= Html::a('Generate Random Apples', ['generate-apples', 'count' => 5], ['class' => 'btn btn-success']) ?>
+<?= Html::a('Generate 5 more apples', ['generate-apples', 'count' => 5], ['class' => 'btn btn-success']) ?>
 
 
 <table class="table table-striped">

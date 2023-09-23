@@ -10,7 +10,7 @@ use backend\service\appleService\AppleEatService;
 use backend\service\appleService\AppleFallService;
 use backend\service\appleService\GenerateAppleService;
 
-class AppleController extends Controller
+class AppleController extends SiteController
 {
     private $generateDumpService;
     private $appleFallService;
